@@ -57,7 +57,7 @@ def summarize(paragraph, gold_summary=None, min_length=60, max_length=100, num_b
                             min_length=min_length, max_length=max_length, num_beams=num_beams)
     
     # generated summary
-    gen_res = tokenizer.decode(gen_outs[0]).strip().replace('<s>','').replace('<pad>','').replace('<\s>','')
+    gen_res = tokenizer.decode(gen_outs[0]).strip().replace('<s>','').replace('<pad>','').replace('</s>','')
 
     if verbose:
         print("Finished generation.")
