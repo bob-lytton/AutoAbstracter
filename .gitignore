@@ -1,0 +1,4 @@
+summarize_model/data/*
+summarize_model/pretrained/*
+*.zip
+.vscode/*
