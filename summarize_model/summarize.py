@@ -1,6 +1,8 @@
+from os.path import dirname, realpath, join
 import torch
 from transformers import BartTokenizer, BartForConditionalGeneration
 from rouge import Rouge
+# from __init__ import model, tokenizer, rouge
 
 # Lazy loading for ROUGE metrics, model and tokenizer
 model = None
@@ -26,18 +28,21 @@ def summarize(paragraph, gold_summary=None, min_length=60, max_length=100, num_b
     # num_beams: used for beam-search in generation. Optional.
 
     global model, tokenizer, rouge
+    pretrained_path = join(dirname(realpath(__file__)), 'pretrained')
+    print("debug:", pretrained_path)
     if model is None:
         if verbose:
             print("Loading model...")
-        model = BartForConditionalGeneration.from_pretrained('./pretrained')
-        model.cuda().eval().half()
+        model = BartForConditionalGeneration.from_pretrained(pretrained_path)
+        # model.cuda().eval().half()
+        model.eval()
     if verbose:
         print("Model loaded.")
 
     if tokenizer is None:
         if verbose:
             print("Loading tokenizer...")
-        tokenizer = BartTokenizer.from_pretrained('./pretrained')
+        tokenizer = BartTokenizer.from_pretrained(pretrained_path)
     if verbose:
         print("Tokenizer loaded.")
 
@@ -52,8 +57,9 @@ def summarize(paragraph, gold_summary=None, min_length=60, max_length=100, num_b
     if verbose:
         print("Generating sequences...")
     with torch.no_grad():
-        gen_outs = model.generate(enc_inp['input_ids'].cuda(), attention_mask=enc_inp['attention_mask'].cuda(),\
-                            bos_token_id=tokenizer.bos_token_id, eos_token_ids=tokenizer.eos_token_id, \
+        # gen_outs = model.generate(enc_inp['input_ids'].cuda(), attention_mask=enc_inp['attention_mask'].cuda(),\
+        gen_outs = model.generate(enc_inp['input_ids'], attention_mask=enc_inp['attention_mask'],\
+                            bos_token_id=tokenizer.bos_token_id, eos_token_id=tokenizer.eos_token_id, \
                             min_length=min_length, max_length=max_length, num_beams=num_beams)
     
     # generated summary
@@ -68,7 +74,6 @@ def summarize(paragraph, gold_summary=None, min_length=60, max_length=100, num_b
         # provide ROUGE scores otherwise
         scores = rouge.get_scores(gen_res, gold_summary)
         return gen_res, scores
-
 
 
 if __name__ == "__main__":
