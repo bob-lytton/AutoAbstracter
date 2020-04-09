@@ -18,7 +18,9 @@ def snippet_list(request):
     elif request.method == 'POST':
         serializer = SnippetSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save()   # only save() then can we create a new object
+            print("debug:", type(serializer.data))
+            print("debug:", serializer.data.keys())
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -16,10 +16,10 @@ class SnippetSerializer(serializers.Serializer):
         """
         Create and return a new `Snippet` instance, given the validated data.
         """
-        print("debug:", type(validated_data))   # class dict
-        print("debug:", validated_data)
+        # print("debug:", type(validated_data))   # class dict
+        # print("debug:", validated_data)
         content = validated_data.get('content', '')
-        print("debug:", content)
+        # print("debug:", content)
         abstract = summarize.summarize(content)
         data = {'content':content, 'abstract':abstract}
         return Snippet.objects.create(**data)
@@ -29,7 +29,7 @@ class SnippetSerializer(serializers.Serializer):
         Update and return an existing `Snippet` instance, given the validated data.
         """
         instance.content = validated_data.get('content', instance.content)
-        instance.abstract = validated_data.get('abstract', instance.abstract)
+        instance.abstract = summarize.summarize(instance.content)
         instance.save()
         return instance
 

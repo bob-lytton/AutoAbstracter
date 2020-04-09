@@ -29,7 +29,7 @@ def summarize(paragraph, gold_summary=None, min_length=60, max_length=100, num_b
 
     global model, tokenizer, rouge
     pretrained_path = join(dirname(realpath(__file__)), 'pretrained')
-    print("debug:", pretrained_path)
+    # print("debug:", pretrained_path)
     if model is None:
         if verbose:
             print("Loading model...")
