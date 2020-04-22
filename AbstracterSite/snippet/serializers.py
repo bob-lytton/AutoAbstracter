@@ -19,22 +19,22 @@ class SnippetSerializer(serializers.Serializer):
     num_beams = serializers.IntegerField(read_only=True)
     default_min_length = '60'   # because request.data automatically transforms the integers into list of strings
     default_max_length = '100'
-    defualt_num_beams = '4'
+    default_num_beams = '4'
 
     def create(self, validated_data):
         """
         Create and return a new `Snippet` instance, given the validated data.
         """
         print("debug:", validated_data.keys())
-
+        print(validated_data)
         # TODO: May optimize by defining to_internal_value() method.
-        content = validated_data.get('content', [''])[0]
+        content = validated_data.get('content', '')
         gold_summary = validated_data.get('gold_summary', None)
         if gold_summary:
-            gold_summary = gold_summary[0]
-        min_length = int(validated_data.get('min_length', [self.default_min_length])[0])
-        max_length = int(validated_data.get('max_length', [self.default_max_length])[0])
-        num_beams = int(validated_data.get('num_beams', [self.defualt_num_beams])[0])
+            gold_summary = gold_summary
+        min_length = int(validated_data.get('min_length', self.default_min_length))
+        max_length = int(validated_data.get('max_length', self.default_max_length))
+        num_beams = int(validated_data.get('num_beams', self.default_num_beams))
         print("debug: min_length={}, max_length={}, num_beams={}".format(min_length, max_length, num_beams))
 
         rouge = ''
