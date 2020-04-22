@@ -1,4 +1,5 @@
-summarize_model/data/*
-summarize_model/pretrained/*
+summarize_model/data
+summarize_model/pretrained
 *.zip
-.vscode/*
+.vscode
+**/__pycache__
