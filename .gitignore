@@ -1,5 +1,6 @@
 summarize_model/data
 summarize_model/pretrained
+**/*.sqlite3
 *.zip
 .vscode
 **/__pycache__

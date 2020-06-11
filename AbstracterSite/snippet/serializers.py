@@ -30,8 +30,11 @@ class SnippetSerializer(serializers.Serializer):
         # TODO: May optimize by defining to_internal_value() method.
         content = validated_data.get('content', '')
         gold_summary = validated_data.get('gold_summary', None)
+        if type(content) == list:
+            content = str(content[0])
         if gold_summary:
-            gold_summary = gold_summary
+            if type(gold_summary) == list:
+                gold_summary = str(gold_summary[0])
         min_length = int(validated_data.get('min_length', self.default_min_length))
         max_length = int(validated_data.get('max_length', self.default_max_length))
         num_beams = int(validated_data.get('num_beams', self.default_num_beams))
@@ -52,7 +55,7 @@ class SnippetSerializer(serializers.Serializer):
                     max_length=max_length, 
                     num_beams=num_beams)
         # abstract = "sorry i don't know."    # debug
-        # print("debug:", "type(rouge):", type(rouge))
+        print("debug:", "type(rouge):", type(rouge), '\nrouge:', rouge)
         data = {'content':content, 'abstract':abstract, 'rouge':rouge}
         return Snippet.objects.create(**data)
 
